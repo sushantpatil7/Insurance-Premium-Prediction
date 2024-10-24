@@ -1,0 +1,35 @@
+body {
+    background-color: #212529; /* Dark background */
+}
+
+.card {
+    border-radius: 10px; /* Rounded corners for card */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Shadow effect */
+}
+
+.card-header {
+    background-color: #343a40; /* Darker header */
+    color: #ffffff; /* White text */
+}
+
+.card-body {
+    background-color: #ffffff; /* White background for the form */
+    border-radius: 0 0 10px 10px; /* Rounded bottom corners */
+}
+
+.form-control {
+    border-radius: 5px; /* Rounded corners for inputs */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Bootstrap primary button color */
+    border: none; /* Remove border */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker on hover */
+}
+
+.text-danger {
+    font-size: 0.875rem; /* Smaller font size for error messages */
+}

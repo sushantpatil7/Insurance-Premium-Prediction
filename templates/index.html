@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="Static/CSS/style.css">
+
+    <title>Welcome To Insurance Premium Predictor</title>
+
+    <style>
+        /* Custom styles for spacing and card dimensions */
+        .container {
+            padding: 50px 100px; /* 50px top and bottom, 100px left and right */
+        }
+        .card {
+            width: 100%; 
+            max-width: 600px; /* Maintains max width of card */
+        }
+    </style>
+</head>
+<body class="bg-dark">
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card">
+            <div class="card-header text-center" onclick="location.reload();"> 
+                <h1>Welcome To Insurance Premium Predictor</h1>
+            </div>
+            <div class="card-body">
+                <form id="premiumForm" method="post" accept-charset="utf-8">
+                    <div class="form-group mb-3">
+                        <label for="age"><b>Enter Age Of The Customer</b></label>
+                        <input class="form-control" id="age" name="age" placeholder="Enter Age Of The Customer" required>
+                        <small class="text-danger" id="ageError"></small>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="sex"><b>Select Gender Of The Customer</b></label>
+                        <select class="form-control" id="sex" name="sex" required>
+                            {% for type in sex %}
+                            <option value="{{ type }}">{{ type }}</option>
+                            {% endfor %}
+                        </select>
+                        <small class="text-danger" id="sexError"></small>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="bmi"><b>Enter BMI Value Of The Customer</b></label>
+                        <input class="form-control" id="bmi" name="bmi" placeholder="Enter BMI Value Of The Customer" required>
+                        <small class="text-danger" id="bmiError"></small>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="children"><b>Enter Number Of Children</b></label>
+                        <input class="form-control" id="children" name="children" placeholder="Enter Number Of Children" required>
+                        <small class="text-danger" id="childrenError"></small>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="smoker"><b>Select Type Of The Customer (Smoker)</b></label>
+                        <select class="form-control" id="smoker" name="smoker" required>
+                            {% for type in smoker %}
+                            <option value="{{ type }}">{{ type }}</option>
+                            {% endfor %}
+                        </select>
+                        <small class="text-danger" id="smokerError"></small>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="region"><b>Select Region Of The Customer</b></label>
+                        <select class="form-control" id="region" name="region" required>
+                            {% for Region in region %}
+                            <option value="{{ Region }}">{{ Region }}</option>
+                            {% endfor %}
+                        </select>
+                        <small class="text-danger" id="regionError"></small>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Predict Premium</button>
+                    </div>
+                </form>
+
+                <br>
+
+                <div class="text-center">
+                    <h3><span id="prediction"></span></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('premiumForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            clearErrors();
+
+            // Validate inputs
+            let isValid = true;
+
+            const age = document.getElementById("age").value;
+            const bmi = document.getElementById("bmi").value;
+            const children = document.getElementById("children").value;
+
+            if (isNaN(age) || age <= 0) {
+                document.getElementById("ageError").innerText = "Invalid age. Please enter a valid number.";
+                isValid = false;
+            }
+
+            if (isNaN(bmi) || bmi <= 0) {
+                document.getElementById("bmiError").innerText = "Invalid BMI. Please enter a valid number.";
+                isValid = false;
+            }
+
+            if (isNaN(children) || children < 0) {
+                document.getElementById("childrenError").innerText = "Invalid number of children. Please enter a valid number.";
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return; // Stop submission if any input is invalid
+            }
+
+            // Proceed to send data if all inputs are valid
+            send_data();
+        });
+
+        function clearErrors() {
+            document.getElementById("ageError").innerText = "";
+            document.getElementById("bmiError").innerText = "";
+            document.getElementById("childrenError").innerText = "";
+            document.getElementById("smokerError").innerText = "";
+            document.getElementById("regionError").innerText = "";
+        }
+
+        function send_data() {
+            var fd = new FormData(document.querySelector('form'));
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('post', '/predict', true);
+            document.getElementById("prediction").innerHTML = "Wait! Predicting Premium..."
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    document.getElementById("prediction").innerHTML = "Premium: " + xhr.responseText;
+                }
+            }
+
+            xhr.send(fd);
+        }
+    </script>
+</body>
+</html>
